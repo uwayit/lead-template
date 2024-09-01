@@ -1,0 +1,111 @@
+# Prohibition of listing an empty directory
+Options -Indexes +SymLinksIfOwnerMatch
+AddDefaultCharset utf-8
+DirectoryIndex index.php
+RewriteEngine On
+# Removes the main double
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.php
+RewriteRule ^index\.php$ / [L,R=301]
+
+
+
+# ----------------------------------------------------------------------
+# Закриваємо доступ до всіх файлів та папок що починаються з крапки окрім well-known
+# ----------------------------------------------------------------------
+RewriteRule "(^|/)\.(?!well-known\/)" - [F]
+# ----------------------------------------------------------------------
+# Visitor access to important files and zip archives is prohibited
+# ----------------------------------------------------------------------
+<Files db.php>
+  deny from all
+</Files>
+<Files form.php>
+  deny from all
+</Files>
+<Files load.php>
+  deny from all
+</Files>
+<Files db_mysql.php>
+  deny from all
+</Files>
+<Files db_sqlite.php>
+  deny from all
+</Files>
+<Files "\.(zip|txt|sql|db)$">
+Deny from all
+</Files>
+# ----------------------------------------------------------------------
+# Блокуємо деякі експлоїти
+# ----------------------------------------------------------------------
+# Якщо у вас виникли проблеми, закоментуйте ці правила
+RewriteCond %{QUERY_STRING} mosConfig_[a-zA-Z_]{1,21}(=|\%3D) [OR]
+# Блокируем возможность посылать base64_encode через URL
+RewriteCond %{QUERY_STRING} base64_encode.*\(.*\) [OR]
+# Блокируем передачу тега <script> через URL
+RewriteCond %{QUERY_STRING} (<|%3C)([^s]*s)+cript.*(>|%3E) [NC,OR]
+# Блокируем выставление переменной PHP GLOBALS через URL
+RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+# Блокируем возможность изменять переменную _REQUEST через URL
+RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+# Посылаем все заблокированные запросы на домашнюю страницу с ошибкой 403 Forbidden error!
+RewriteRule ^(.*)$ index.php [F,L]
+
+
+# ----------------------------------------------------------------------
+# Ще трохи безпеки
+# ----------------------------------------------------------------------
+# Щоб не показувати точну версію Apache у заголовках
+ServerSignature Off
+
+# ----------------------------------------------------------------------
+# Стиснення файлів
+# ----------------------------------------------------------------------
+<IfModule mod_deflate.c>
+    # Увімкнення стиснення для різних типів контенту
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript application/json application/font-woff application/font-woff2 image/svg+xml
+
+    # Вимкнення стиснення для вже стиснутих файлів
+    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp|zip|gz|bz2|rar|7z)$ no-gzip dont-vary
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Кешування файлів
+# ----------------------------------------------------------------------
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Кешування зображень та іконок на місяць
+    ExpiresByType image/x-icon "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+
+    # Кешування шрифтів на місяць
+    ExpiresByType application/font-woff "access plus 1 month"
+    ExpiresByType application/font-woff2 "access plus 1 month"
+
+    # Кешування скриптів та стилів на один тиждень
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType text/javascript "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    
+    # Кешування HTML файлів на 12 годин
+    ExpiresByType text/html "access plus 12 hours"
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Встановлення заголовків Cache-Control для різних типів файлів
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "public, max-age=43200"
+    </FilesMatch>
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|ico|svg)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+    <FilesMatch "\.(css|js|woff|woff2|svg|json)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+</IfModule>
+
+
