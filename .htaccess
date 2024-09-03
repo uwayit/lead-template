@@ -16,24 +16,12 @@ RewriteRule "(^|/)\.(?!well-known\/)" - [F]
 # ----------------------------------------------------------------------
 # Visitor access to important files and zip archives is prohibited
 # ----------------------------------------------------------------------
-<Files db.php>
+<FilesMatch "^(db|form)\.php$">
   deny from all
-</Files>
-<Files form.php>
-  deny from all
-</Files>
-<Files load.php>
-  deny from all
-</Files>
-<Files db_mysql.php>
-  deny from all
-</Files>
-<Files db_sqlite.php>
-  deny from all
-</Files>
-<Files "\.(zip|txt|sql|db)$">
-Deny from all
-</Files>
+</FilesMatch>
+<FilesMatch "\.(zip|txt|sql|db)$">
+  Deny from all
+</FilesMatch>
 # ----------------------------------------------------------------------
 # Блокуємо деякі експлоїти
 # ----------------------------------------------------------------------

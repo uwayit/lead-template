@@ -89,8 +89,8 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                            <input type="text" name="phone" class="form-control phone" placeholder="Your Phone"
-                              onfocus="if(this.value=='' || this.value=='Your Phone'){ this.value='+'; } "
-                              onblur="if(this.value=='' || this.value=='+') this.value='Your Phone';">
+                              onfocus="if(this.value=='' || this.value=='Your Phone' || this.value=='+')this.value='+'"
+                              onblur="if(this.value=='' || this.value=='+' || this.value=='Your Phone')this.value=''">
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                            <label class="sr-only">Select Time</label>
@@ -469,8 +469,8 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                            <input type="text" name="phone" class="form-control phone" placeholder="Your Phone"
-                              onfocus="if(this.value=='' || this.value=='Your Phone'){ this.value='+'; } "
-                              onblur="if(this.value=='' || this.value=='+') this.value='Your Phone';">
+                              onfocus="if(this.value=='' || this.value=='Your Phone' || this.value=='+')this.value='+'"
+                              onblur="if(this.value=='' || this.value=='+' || this.value=='Your Phone')this.value=''">
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                            <label class="sr-only">Select Time</label>
@@ -617,5 +617,4 @@
    <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/include/script.php"; ?>
 
 </body>
-
 </html>
