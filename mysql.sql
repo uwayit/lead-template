@@ -10,7 +10,7 @@
  Target Server Version : 50699
  File Encoding         : 65001
 
- Date: 03/09/2024 22:47:02
+ Date: 08/09/2024 17:29:13
 */
 
 SET NAMES utf8;
@@ -25,7 +25,6 @@ CREATE TABLE `actions_log`  (
   `datetime` longtext NULL,
   `email` longtext NULL,
   `phone` longtext NULL,
-  `first_name` longtext NULL,
   `last_name` longtext NULL,
   `select_service` longtext NULL,
   `select_price` longtext NULL,
@@ -40,6 +39,8 @@ CREATE TABLE `actions_log`  (
   `badData` longtext NULL,
   `fieldError` longtext NULL,
   `emailBefore` longtext NULL,
+  `page` longtext NULL,
+  `first_name` longtext NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -62,13 +63,18 @@ CREATE TABLE `leads`  (
   `last_name` longtext NULL,
   `select_service` longtext NULL,
   `select_price` longtext NULL,
-  `comments` longtext NULL,
   `ip` longtext NULL,
   `country` longtext NULL,
   `city` longtext NULL,
   `form` int NULL,
   `landingUrl` longtext NULL,
   `emailBefore` longtext NULL,
+  `status` longtext NULL,
+  `response` longtext NULL,
+  `fieldError` longtext NULL,
+  `page` longtext NULL,
+  `badData` longtext NULL,
+  `comments` longtext NULL,
   PRIMARY KEY (`id`)
 );
 

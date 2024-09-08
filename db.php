@@ -111,4 +111,38 @@ class db {
         }
         self::$instance = null;
     }
+
+    // Метод для перевірки стовпців і додавання відсутніх
+    public static function checkAndAddColumns($columns, $table)
+        {
+        // Отримуємо існуючі стовпці таблиці
+        if (core::$SQL === 'mysql') {
+            $query = "SHOW COLUMNS FROM `$table`";
+            } elseif (core::$SQL === 'sqlite') {
+            $query = "PRAGMA table_info(`$table`)";
+            }
+
+        $result = self::db()->query($query);
+        $existingColumns = [];
+
+        while ($row = db::fetch($result)) {
+            if (core::$SQL === 'mysql') {
+                $existingColumns[] = $row['Field'];
+                } elseif (core::$SQL === 'sqlite') {
+                $existingColumns[] = $row['name'];
+                }
+            }
+
+        // Перевіряємо, чи є кожен ключ у таблиці, і додаємо відсутні
+        foreach ($columns as $column) {
+            if (!in_array($column, $existingColumns)) {
+                if (core::$SQL === 'mysql') {
+                    $addColumnQuery = "ALTER TABLE `$table` ADD `$column` TEXT";
+                    } elseif (core::$SQL === 'sqlite') {
+                    $addColumnQuery = "ALTER TABLE `$table` ADD COLUMN `$column` TEXT";
+                    }
+                db::db()->query($addColumnQuery);
+                }
+            }
+        }
 }
